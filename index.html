@@ -1,0 +1,837 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Mining Exam">
+  <link rel="apple-touch-icon" href="https://img1.wsimg.com/isteam/ip/0bf70def-deca-417e-962f-b76f39b1865e/mine-haul-truck-banner.jpg">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>GATE-style Mining Exam — 65 Qs</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --accent:#FFD700;
+  --bg-panel: rgba(18,18,20,0.66);
+  --card-border: rgba(255,255,255,0.06);
+  --muted: rgba(255,255,255,0.84);
+  --correct: #28a745;
+  --wrong: #e5534b;
+
+  /* New legend colors */
+  --answered: #2ecc71;     /* green */
+  --review: #3498db;       /* blue */
+  --not-visited: #7f8c8d;  /* grey */
+  --not-answered: #e74c3c; /* red */
+}
+
+/* legend styling */
+.legend {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin-top: 12px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.legend div {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend span {
+  width: 14px;
+  height: 14px;
+  display: inline-block;
+  border-radius: 3px;
+}
+
+/* count styles */
+.legend .count {
+  font-weight: 700;
+  margin-left: 6px;
+  color: var(--muted);
+}
+.legend .count.answered { color: var(--answered); }
+.legend .count.review { color: var(--review); }
+.legend .count.not-visited { color: var(--not-visited); }
+.legend .count.not-answered { color: var(--not-answered); }
+
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{  height:100%;  font-family: "Times New Roman", Times, serif;  background:#fff;  color:#000;}
+
+.container-wrap{
+  min-height:100vh;
+  background-image: url('https://raw.githubusercontent.com/indiancoalchronicles/mining1/refs/heads/main/background.png');
+  background-size:cover;background-position:center center;
+  display:flex;align-items:center;justify-content:center;position:relative;
+}
+.overlay{position:absolute;inset:0;background:linear-gradient(180deg, rgba(255,255,255,0.25),  rgba(255,255,255,0.40));z-index:0}
+.card{position:relative;z-index:2;background:var(--bg-panel);border-radius:14px;padding:18px;backdrop-filter:blur(8px);border:1px solid var(--card-border);box-shadow:0 20px 60px rgba(255,255,255,0.25);width:1100px;max-width:96%}
+.welcome{padding:30px;text-align:center}
+.welcome h1{color:var(--accent);margin-bottom:6px}
+.welcome p{color:var(--muted);margin-bottom:12px}
+.btn{padding:10px 16px;border-radius:8px;border:none;background:var(--accent);color:#000;font-weight:700;cursor:pointer;font-size:16px}
+.btn.ghost{padding:10px 16px;border-radius:8px;border:none;background:white;color:#000;font-weight:700;cursor:pointer;font-size:16px}
+.btn.gho{padding:10px 16px;border-radius:8px;border:none;background:#3498db;color:#000;font-weight:700;cursor:pointer;font-size:16px}
+.btn.ghos{padding:10px 16px;border-radius:8px;border:none;background:#D3B683;color:#000;font-weight:700;cursor:pointer;font-size:16px}
+.btn.ghostt{padding:10px 16px;border-radius:8px;border:none;background:#2ecc71;color:#000;font-weight:700;cursor:pointer;font-size:16px}
+.layout{display:flex;gap:16px;margin-top:12px}
+.left{flex:1 1 68%}
+.right{flex-basis:32%;min-width:260px}
+.qmeta{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.qnum{font-size:14px;color:var(--muted)}
+
+/* === QUESTION AREA: FULL WHITE bg + black text for everything inside === */
+.qtext{
+  font-size:18px;
+  margin:10px 0;
+  line-height:1.35;
+  background: #ffffff;                 /* full white background */
+  color: #000;                         /* black text */
+  padding: 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(0,0,0,0.06);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+  overflow:auto;
+}
+
+/* force tables and any inline-styled white-on-dark to become black-on-white inside question area
+   and give clear solid borders (th/td) */
+.qtext table,
+.qtext thead,
+.qtext tbody,
+.qtext tfoot,
+.qtext th,
+.qtext td,
+.qtext tr {
+  color: #000 !important;
+  background: #fff !important;
+  border-color: #000 !important;
+  border: 1px solid rgba(0,0,0,0.9) !important;
+  border-collapse: collapse !important;
+  padding:6px !important;
+}
+
+/* ensure table element itself uses border-collapse so lines are crisp */
+.qtext table {
+  border-collapse: collapse !important;
+  width: 100% !important;
+}
+
+/* header shading (subtle) but black text */
+.qtext thead th {
+  background: #f7f7f7 !important;
+  color: #000 !important;
+  font-weight:700 !important;
+}
+
+/* also ensure inline style colors inside options / questions render black */
+.qtext * { color: #000 !important; }
+
+.qtext img { border: none !important; } /* ensure any remaining img borders removed inside qtext */
+
+/* options - keep them readable and distinct */
+.options{display:flex;flex-direction:column;gap:8px}
+.opt{
+  padding:10px 12px;border-radius:10px;
+  background: rgba(255,255,255,0.98);
+  border:1px solid rgba(0,0,0,0.06);
+  cursor:pointer;text-align:left;
+  color:#000;               /* black option text */
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.opt input{ margin-right:8px; }
+.opt.selected{outline:2px solid rgba(255,204,0,0.6)}
+.timer{font-weight:700;color:var(--accent);font-size:24px;text-align:right}
+.palette{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.pmini {width: 36px;  height: 36px;  border-radius: 8px;  background: var(--not-visited);  display: flex;  align-items: center;  justify-content: center;  cursor: pointer;  border: 1px solid rgba(255,255,255,0.04);  color: #fff;  font-weight: 600;}
+.pmini.answered {  background: var(--answered);}
+.pmini.not-answered {  background: var(--not-answered);}
+.pmini.review {  background: var(--review);  color: #fff;}
+.pmini.active{outline:3px solid rgba(255,204,0,0.4)}
+.controls{display:flex;justify-content:space-between;align-items:center;margin-top:12px}
+.small{font-size:13px;color:var(--muted)}
+.submit-area{text-align:center;margin-top:12px}
+.result-wrap{text-align:center;margin-top:16px;color:var(--muted)}
+.review-ui{display:none;margin-top:18px}
+.answer-correct{color:var(--accent);font-weight:700}
+.answer-wrong{color:var(--wrong);font-weight:700}
+.footer{margin-top:10px;font-size:12px;color:var(--muted);text-align:center}
+.hidden{display:none}
+.modal-overlay{
+  position:fixed; inset:0; background: rgba(0,0,0,0.75);
+  display:flex; align-items:center; justify-content:center; z-index:9999;
+}
+.modal{
+  background:#0b0b0b; padding:28px; border-radius:12px; text-align:center; max-width:420px; width:90%;
+  box-shadow:0 10px 40px rgba(0,0,0,0.6); border:1px solid rgba(255,255,255,0.04);
+}
+.modal h2{Color:var(--accent); margin-bottom:8px}
+.modal p{color:#fff; font-size:1.1rem}
+.modal button{margin-top:16px}
+@media (max-width:1000px){.layout{flex-direction:column}.right{order:-1}}
+</style>
+
+<!-- KaTeX -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"
+  onload="if(typeof renderMathInElement==='function'){ renderMathInElement(document.body, { delimiters: [{left:'$$', right:'$$', display:true}, {left:'\\(', right:'\\)', display:false}] }); }">
+</script>
+</head>
+<body>
+<div class="container-wrap">
+  <div class="overlay" aria-hidden="true"></div>
+
+  <div class="card" role="application" aria-label="GATE style mining quiz">
+
+    <!-- WELCOME -->
+    <div id="welcome" class="welcome" aria-live="polite">
+      <div style="text-align:center; margin-bottom:12px;">
+        <img src="https://img1.wsimg.com/isteam/ip/0bf70def-deca-417e-962f-b76f39b1865e/logo.png"
+             alt="Indian Coal Chronicles Logo"
+             style="max-width:100px; height:auto; display:inline-block;"/>
+      </div>
+      <h1>Welcome to Indian Coal Chronicles</h1>
+      <p><strong>GATE - Mining Practice Paper</strong>.</p>
+      <div style="text-align:left;max-width:820px;margin:12px auto;color:var(--muted);">
+        <strong>Instructions:</strong>
+    <ol style="margin-top: 8px; line-height: 1.6;">
+      <li>This paper comprises two sections: <strong>General Aptitude (GA)</strong> and <strong>Mining Subject (MN)</strong>.</li>
+      <li>The duration of the examination is <strong> 3 hours</strong>.</li>
+      <li><strong>Questions 1–10</strong> pertain to General Aptitude, while <strong>Questions 11–65</strong> relate to the Mining Subject, making up a total of <strong>100 marks</strong>.</li>
+      <li>
+        The types of questions included are as follows:
+        <ol type="a" style="margin-top: 4px; margin-left: 32px; list-style-type: lower-alpha;">
+          <li>Multiple Choice Questions <strong>(MCQ)</strong></li>
+          <li>Multiple Select Questions <strong>(MSQ)</strong></li>
+          <li>Numerical Answer Type <strong>(NAT)</strong> questions</li>
+        </ol>
+      </li>
+      <li>Marking Scheme: Each question carries either <strong>1 mark</strong> or <strong>2 marks</strong>.</li>
+      <li>
+        Negative Marking:
+        <ol type="a" style="margin-top: 4px; margin-left: 32px; list-style-type: lower-alpha;">
+          <li>Negative marking applies only to MCQ-type questions.</li>
+          <li>For a 1-mark MCQ, <strong>1/3 mark</strong> will be deducted for each incorrect response.</li>
+          <li>For a 2-mark MCQ, <strong>2/3 mark</strong> will be deducted for each incorrect response.</li>
+          <li><strong>No negative marking</strong> will be applied for incorrect answers to MSQ or NAT questions.</li>
+          <li><strong>No partial marking</strong> is applicable for MSQ questions.</li>
+        </ul>
+      </div>
+      <button id="startBtn" class="btn ghostt">Start</button>
+    </div>
+
+    <!-- QUIZ UI -->
+<div id="quizUI" class="hidden" aria-hidden="true">
+  <div class="layout">
+    <div class="left">
+      <div class="qmeta">
+        <div class="qnum" id="qnum">Question 1 / 65</div>
+        <div class="timer" id="timer">3:00:00</div>
+      </div>
+
+      <div class="qtext" id="qtext">Loading...</div>
+      <div class="options" id="options" role="group" aria-labelledby="qtext"></div>
+
+      <div class="controls">
+        <div>
+          <button id="clearBtn" class="btn ghost" aria-label="Clear selected option">Clear Response</button>
+          <button id="prevBtn" class="btn ghos" aria-label="Previous question">Previous</button>
+          <button id="nextBtn" class="btn" aria-label="Save and go to next question">Save & Next</button>
+          <!-- Save & Mark for Review button removed as requested -->
+          <button id="reviewNextBtn" class="btn gho" aria-label="Mark for review and go to next">Mark for Review & Next</button>
+        </div>
+
+        <div class="small" id="qmarks">1 mark • MCQ</div>
+      </div>
+
+      <div id="explain" class="small hidden" style="margin-top:10px;background:rgba(0,0,0,0.05);padding:10px;border-radius:8px;color:#000"></div>
+    </div>
+
+    <div class="right">
+      <div>
+        <strong style="color:#fff">Question Palette</strong>
+        <div class="palette" id="palette" aria-live="polite" style="margin-top:8px"></div>
+      </div>
+
+      <!-- Color Legend (kept all items) -->
+      <div class="legend" aria-hidden="false" style="margin-top:12px">
+        <div><span style="background: var(--answered);"></span> Answered <span id="count-answered" class="count answered">(0)</span></div>
+        <div><span style="background: var(--review);"></span> Marked for Review <span id="count-review" class="count review">(0)</span></div>
+        <div><span style="background: var(--not-visited);"></span> Not Visited <span id="count-not-visited" class="count not-visited">(65)</span></div>
+        <div><span style="background: var(--not-answered);"></span> Not Answered <span id="count-not-answered" class="count not-answered">(0)</span></div>
+      </div>
+
+      <div class="submit-area">
+        <div class="result-wrap" id="liveInfo"></div>
+        <button id="submitBtn" class="btn ghostt" style="margin-top:10px">Submit</button>
+      </div>
+
+      <div style="margin-top:12px" class="footer">Indian Coal Chronicles</div>
+    </div>
+  </div>
+</div>
+
+    <!-- REVIEW -->
+    <div id="reviewUI" class="review-ui" aria-hidden="true">
+      <h2 style="color:var(--accent);text-align:center">Exam Completed</h2>
+      <div id="finalScore" style="font-size:1.4rem;text-align:center;margin-top:8px;color:#ffd700"></div>
+      <div id="reviewList" style="margin-top:12px;overflow:auto;padding:8px;border-top:1px solid rgba(255,255,255,0.03)"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+/* --------------------------
+  Helper funcs + dataset
+--------------------------- */
+
+function marksForQ(qno){
+  if ((qno>=1 && qno<=5) || (qno>=11 && qno<=35)) return 1;
+  if ((qno>=6 && qno<=10) || (qno>=36 && qno<=65)) return 2;
+  return 1;
+}
+function negativeForQ(qno){
+  return marksForQ(qno) === 1 ? (1/3) : (2/3);
+}
+
+/* QUESTIONS — NATs include answerMin/answerMax ranges */
+const QUESTIONS = [
+  {qno:1, section:'GA', type:'mcq', marks:marksForQ(1), question:"(i) Arun and Aparna are here.<br>(ii) Arun and Aparna is here.<br>(iii) Arun’s families is here.<br>(iv) Arun’s family is here.<br>Which of the above sentences are grammatically CORRECT?", options:["(i) and (ii)","(i) and (iv)","(ii) and (iv)","(iii) and (iv)"], answer:1, explanation:" "},
+  {qno:2, section:'GA', type:'mcq', marks:marksForQ(2), question:'<br> <img src=" https://raw.githubusercontent.com/indiancoalchronicles/GA1/refs/heads/main/q8-1.jpg"       alt="Longitudinal section of mined-out stope block"       style="max-width:300px; height:auto; border:1px solid rgba(255,255,255,0.2); border-radius:8px; display:block; margin:10px auto;"><br><br> The mirror image of the above text about the x-axis is ', options:[ '<br> <img src=" https://raw.githubusercontent.com/indiancoalchronicles/GA1/refs/heads/main/q8-2.jpg"       alt="Longitudinal section of mined-out stope block"       style="max-width:200px; height:auto; border:1px solid rgba(255,255,255,0.2); border-radius:8px; display:block; margin:10px auto;">','<br> <img src=" https://raw.githubusercontent.com/indiancoalchronicles/GA1/refs/heads/main/q8-3.jpg"       alt="Longitudinal section of mined-out stope block"       style="max-width:200px; height:auto; border:1px solid rgba(255,255,255,0.2); border-radius:8px; display:block; margin:10px auto;">','<br> <img src=" https://raw.githubusercontent.com/indiancoalchronicles/GA1/refs/heads/main/q8-4.jpg"       alt="Longitudinal section of mined-out stope block"       style="max-width:200px; height:auto; border:1px solid rgba(255,255,255,0.2); border-radius:8px; display:block; margin:10px auto;">','<br> <img src=" https://raw.githubusercontent.com/indiancoalchronicles/GA1/refs/heads/main/q8-5.jpg "       alt="Longitudinal section of mined-out stope block"       style="max-width:200px; height:auto; border:1px solid rgba(255,255,255,0.2); border-radius:8px; display:block; margin:10px auto;">'], answer:1, explanation:" "},
+  {qno:3, section:'GA', type:'mcq', marks:marksForQ(3), question:"Two identical cube shaped dice each with faces numbered 1 to 6 are rolled simultaneously. The probability that an even number is rolled out on each dice is:", options:["1/36","1/12","1/8","1/4"], answer:3, explanation:" "},
+  {qno:4, section:'GA', type:'mcq', marks:marksForQ(4), question:"⊕ and ⊙ are two operators on numbers p and q such that 𝒑⊙𝒒 = 𝒑 − 𝒒, and 𝒑⊕𝒒 = 𝒑 × 𝒒. Then, (𝟗⊙(𝟔⊕𝟕))⊙(𝟕⊕(𝟔⊙𝟓)) =", options:["40","-26","-33","-40"], answer:3, explanation:" "},
+  {qno:5, section:'GA', type:'mcq', marks:marksForQ(5), question:"Four persons P, Q, R and S are to be seated in a row. R should not be seated at the second position from the left end of the row. The number of distinct seating arrangements possible is:", options:["6","9","18","24"], answer:2, explanation:" "},
+  {qno:6, section:'GA', type:'mcq', marks:marksForQ(6), question:"John Thomas, an __________________ writer, passed away in 2018.", options:["imminent","prominent","eminent","dominant"], answer:2, explanation:" "},
+  {qno:7, section:'GA', type:'mcq', marks:marksForQ(7), question:"____ I permitted him to leave, I wouldn’t have had any problem with him being absent, _____ I?", options:["Had, wouldn’t","Have, would","Had, would","Have, wouldn’t"], answer:2, explanation:" "},
+  {qno:8, section:'GA', type:'mcq', marks:marksForQ(8), question:"A worker noticed that the hour hand on the factory clock had moved by 225 degrees during her stay at the factory. For how long did she stay in the factory?", options:["3.75 hours","4 hours and 15 mins","8.5 hours","7.5 hours"], answer:3, explanation:" "},
+  {qno:9, section:'GA', type:'mcq', marks:marksForQ(9), question:"The sum and product of two integers are 26 and 165 respectively. The difference between these two integers is _____.", options:["2","3","4","6"], answer:2, explanation:" "},
+  {qno:10, section:'GA', type:'mcq', marks:marksForQ(10), question:"The minister avoided any mention of the issue of women’s reservation in the private sector. He was accused of __________ the issue.", options:["collaring","skirting","tying","belting"], answer:1, explanation:" "},
+  {qno:11, section:'MN', type:'mcq', marks:marksForQ(11), question:"The value of \\(\\lim_{x\\to0} (\\frac{(1-x)^{n}-1}{x})\\) is", options:["0","1","−n","n"], answer:2, explanation:" "},
+  {qno:12, section:'MN', type:'mcq', marks:marksForQ(12), question:"A velocity field in Cartesian co-ordinates is expressed as \\(\\mathbf{v}=x\\hat{i}+y\\hat{j}+p(z)\\hat{k}\\), where \\(p(0)=0\\) If \\(\\operatorname{div}\\mathbf{v}=0\\), then \\(p(z)\\) is", options:["0","−2z","2","2z"], answer:1, explanation:" "},
+  {qno:13,section:'MN',type:'mcq', marks:marksForQ(13), question: "The constant term of the Fourier coefficients of the periodic function$$ f(x)= \\begin{cases} -k, & \\text{ for } -\\pi < x < 0 \\\\ k, & \\text{ for } 0 < x < \\pi \\end{cases} $$ <br> \\(f(x+2\\pi)=f(x)\\) and k = constant is", options:["k","2k","2\\(\\pi\\)","0"], answer:3, explanation:" "},
+  {qno:14, section:'MN', type:'mcq', marks:marksForQ(14), question:'Two vectors x and y are shown in the figure. The projection vector of x on y is<br><br><img src="https://raw.githubusercontent.com/indiancoalchronicles/mining1/refs/heads/main/2022.14.jpeg" alt="image loading" style="max-width:290px; height:auto;  border-radius:8px; display:block; margin:10px auto;">', options:["\\(\\frac{(x^{T}y)}{(y^{T}y)}\\,y\\)","\\(x\\times y\\)","\\(\\frac{x\\times y}{(y^{T}y)}\\)"," \\(\\frac{(x^{T}y)}{(x^{T}x)}\\,x\\)"], answer:0, explanation:" "},
+  {qno:15, section:'MN', type:'mcq', marks:marksForQ(15), question:"A deposit has grade attribute X ∈ [0,30] with density function \\(f(x)\\). For a cut-off grade \\(x_{c}\\), the proportion of ore in the deposit is given by", options:["\\(\\int_{0}^{30} f(x)\\,dx - \\int_{0}^{x_{c}} f(x)\\,dx\\)","\\(\\tfrac{1}{2}\\int_{0}^{30} f(x)\\,dx - \\int_{0}^{x_{c}} f(x)\\,dx\\)","\\(\\tfrac{1}{2}\\int_{0}^{30} f(x)\\,dx + \\int_{0}^{x_{c}} f(x)\\,dx\\)","\\(\\int_{0}^{x_{c}} f(x)\\,dx\\)"], answer:0, explanation:" "},
+  {qno:16, section:'MN', type:'mcq', marks:marksForQ(16), question:"The drilling technique most applicable for mineral exploration is", options:["Percussive drilling","Tricone roller drilling","Rotary-percussive drilling","Diamond core drilling"], answer:3, explanation:" "},
+  {qno:17, section:'MN', type:'mcq', marks:marksForQ(17), question:'Match the rock with its metamorphosed form: <br><br>  <table border="1" cellspacing="0" cellpadding="6" style="border-collapse:collapse; width:480px; text-align:center; background:rgba(255,255,255,0.03); color:#fff; border:1px solid rgba(255,255,255,0.1);">    <thead style="background:rgba(255,255,255,0.08);">      <tr>        <th> </th> <th>Igneous / Sedimentary rock</th><th></th>  <th>Metamorphic rock</th>        </tr>    </thead>    <tbody>      <tr><td> P </td><td> Granite </td><td> I </td><td>Quartzite </td></tr>      <tr><td> Q </td><td> Limestone </td><td> II </td><td>Gneiss </td></tr><tr><td> R </td><td> Sandstone </td><td> III </td><td>Schist </td></tr><tr><td> S </td><td> Gabbro </td><td> IV</td><td>Marble </td></tr>          </tbody>  </table> ', options:["P-II, Q-IV, R-I, S-III","P-III, Q-I, R-IV, S-II","P-IV, Q-III, R-I, S-II","P-II, Q-III, R-IV, S-I"], answer:0, explanation:" "},
+  {qno:18, section:'MN', type:'mcq', marks:marksForQ(18), question:"Identify the WRONG statement <br><br> Break-even stripping ratio", options:["takes into account the maximum pit slope that is safe","helps in determining the volume of the overburden","presents the maximum possible mine size that is economical","takes into account the life of the mine"], answer:3, explanation:" "},
+  {qno:19, section:'MN', type:'mcq', marks:marksForQ(19), question:'A square pattern of blasting is shown in the figure. For the case of simultaneous blast, identify the zone of no fragmentation<br><br><img src="https://raw.githubusercontent.com/indiancoalchronicles/mining1/refs/heads/main/2022.19.jpeg" alt="image loading" style="max-width:290px; height:auto;  border-radius:8px; display:block; margin:10px auto;">', options:["P","Q","R","S"], answer:2, explanation:" "},
+  {qno:20, section:'MN', type:'mcq', marks:marksForQ(20), question:'In the truss shown in the figure, the force in the member BD, in kN, is<br><br><img src="https://raw.githubusercontent.com/indiancoalchronicles/mining1/refs/heads/main/2022.20.jpeg" alt="image loading" style="max-width:290px; height:auto;  border-radius:8px; display:block; margin:10px auto;">', options:["7","5","2","0"], answer:3, explanation:" "},
+  {qno:21, section:'MN', type:'mcq', marks:marksForQ(21), question:'The correct vertical stress profile in the case of tributary area method for pillar design is<br><br><img src="https://raw.githubusercontent.com/indiancoalchronicles/mining1/refs/heads/main/2022.21.jpeg" alt="image loading" style="max-width:450px; height:auto;  border-radius:8px; display:block; margin:10px auto;">', options:["I","II","III","IV"], answer:2, explanation:" "},
+  {qno:22, section:'MN', type:'mcq', marks:marksForQ(22), question:'The bottom section of a stoping block has dimensions 200 m × 40 m. If the modified RMR of rock mass is 50, the appropriate method of mining on the basis of Laubscher’s chart in the figure is<br><br><img src="https://raw.githubusercontent.com/indiancoalchronicles/mining1/refs/heads/main/2022.22.jpeg" alt="image loading" style="max-width:450px; height:auto;  border-radius:8px; display:block; margin:10px auto;">', options:["Shrinkage stoping","Cut and fill","Block Caving","Sublevel stoping"], answer:1, explanation:" "},
+  {qno:23, section:'MN', type:'mcq', marks:marksForQ(23), question:'Match the machine with its component: P Continuous miner, Q Jack hammer, R AFC, S Shield support. Components: I Flight bar, II Lemniscate link, III Loading apron, IV Rifle bar<br><br>  <table border="1" cellspacing="0" cellpadding="6" style="border-collapse:collapse; width:480px; text-align:center; background:rgba(255,255,255,0.03); color:#fff; border:1px solid rgba(255,255,255,0.1);">    <thead style="background:rgba(255,255,255,0.08);">      <tr>        <th> </th> <th>Machine</th><th></th>  <th>Component</th>        </tr>    </thead>    <tbody>      <tr><td> P </td><td> Continous Miner </td><td> I </td><td>Flight bar </td></tr>      <tr><td> Q </td><td> Jack hammer</td><td> II </td><td>Lemniscate link </td></tr><tr><td> R </td><td> AFC </td><td> III </td><td>Loading apron </td></tr><tr><td> S </td><td> Sheild support </td><td> IV</td><td>Rifle bar</td></tr>          </tbody>  </table> ', options:["P-III, Q-IV, R-I, S-II","P-IV, Q-III, R-I, S-II","P-III, Q-IV, R-II, S-I","P-IV, Q-III, R-II, S-I"], answer:0, explanation:" "},
+  {qno:24, section:'MN', type:'mcq', marks:marksForQ(24), question:"Which one of the following is NOT a notifiable disease as per Indian mining legislation?", options:["Silicosis","Noise induced hearing loss","Nystagmus","Asbestosis"], answer:2, explanation:" "},
+  {qno:25, section:'MN', type:'mcq', marks:marksForQ(25), question:"If the ambient lapse rate is higher than the dry adiabatic lapse rate, the atmosphere is", options:["stable","neutral","unstable","strongly stable"], answer:2, explanation:" "},
+  {qno:26, section:'MN', type:'mcq', marks:marksForQ(26), question:"Identify the WRONG statement regarding controlled air recirculation in an underground workplace can", options:["it can increase the air velocity at the workplace","it can lead to increased concentration of contaminants in the workplace","it can require installation of an additional fan in the system","it leads to overall ventilation cost savings"], answer:1, explanation:" "},
+  {qno:27, section:'MN', type:'mcq', marks:marksForQ(27), question:"The correct order of pavement layers for a haul road from top to bottom is", options:["Wearing course → Base → Sub base → Sub grade","Wearing course → Sub base → Base → Sub grade","Wearing course → Sub grade → Sub base → Base","Wearing course → Base → Sub grade → Sub base"], answer:0, explanation:" "},
+  {qno:28, section:'MN', type:'mcq', marks:marksForQ(28), question:"A mining company produces iron ore and sells to another company. Royalty to be paid is on the basis of", options:["quantity of ore produced","quantity of ore sold","difference between quantities produced and sold","net profit"], answer:1, explanation:" "},
+  {qno:29, section:'MN', type:'nat', marks:marksForQ(29), question:"The cost of a screw compressor with life 15 years is ₹2,100,000. If depreciation charged using sum-of-the-years-digits method at the end of 4th year is ₹200,000, the salvage value (₹) is (round off to 1 decimal place)", answerMin:100000.0, answerMax:100000.0, explanation:" "},
+  {qno:30, section:'MN', type:'mcq', marks:marksForQ(30), question:" A safety device consists of two independent critical components \\(X_{1}\\) and \\(X_{2}\\). The failure of any one or both of these components can cause an accident. The failure probabilities of components \\(X_{1}\\) and \\(X_{2}\\) are 0.2 and 0.1, respectively. The probability of occurrence of an accident is_______. (round off to two decimal places) ", options:["0.02","0.26","0.28","0.30"], answerMin:0.28, answerMax:0.28,  explanation:" "},
+  {qno:31, section:'MN', type:'nat', marks:marksForQ(31), question:"In a levelling survey, a reading is taken as 2.25 m. However, along the line of sight there is deflection of 20 cm with respect to vertical position of the staff. The correct reading, in m is_______. (round off to two decimal places) ", answerMin:2.20, answerMax:2.30,  explanation:" "},
+  {qno:32, section:'MN', type:'nat', marks:marksForQ(32), question:"Water flows through a vertical sand column of cross-sectional area 4000 mm² and length 300 mm. For a water head of 600 mm, quantity of seepage is 100 mm³/min. The hydraulic conductivity of the sand column in mm/min is_______.  (round off to 3 decimals)", answerMin:0.012, answerMax:0.013,  explanation:" "},
+  {qno:33, section:'MN', type:'nat', marks:marksForQ(33), question: 'The modified Lauffer diagram as shown in the figure relates to roof span, RMR and stand-up time. In a metal mine, roof span of a drive is 4 m. If the RMR of the rock mass changes from 40 to 60, then the stand-up time increases by a factor of________. (round off to two decimal places)  <br><br><img src="https://raw.githubusercontent.com/indiancoalchronicles/mining1/refs/heads/main/2022.33.jpeg" alt="image loading" style="max-width:590px; height:auto;  border-radius:8px; display:block; margin:10px auto;">', answerMin:50.0, answerMax:70.0,  explanation:" "},
+  {qno:34, section:'MN', type:'nat', marks:marksForQ(34), question: 'In a friction winder, the skip accelerates to a steady speed over a time span of 15 s from the start. The torque vs. time diagram for the winding cycle is shown in the figure. The deceleration time in seconds is_______. (round off to one decimal place) <br><br><img src="https://raw.githubusercontent.com/indiancoalchronicles/mining1/refs/heads/main/2022.34.jpeg" alt="image loading" style="max-width:450px; height:auto;  border-radius:8px; display:block; margin:10px auto;">', answerMin:10.0, answerMax:10.0,  explanation:" "},
+  {qno:35, section:'MN', type:'nat', marks:marksForQ(35), question:" At a measurement station, the air quality parameters \\(PM_{2.5}\\), \\(NO_{2}\\) and \\(O_{3}\\) have the AQI sub-index values as 180, 96, and 84, respectively. The AQI for the station is_______. (in integer) ", answerMin:180, answerMax:180,  explanation:" "},
+  {qno:36, section:'MN', type:'mcq', marks:marksForQ(36), question:'Match drilling pattern with mining operation: <br><br>  <table border="1" cellspacing="0" cellpadding="6" style="border-collapse:collapse; width:480px; text-align:center; background:rgba(255,255,255,0.03); color:#fff; border:1px solid rgba(255,255,255,0.1);">    <thead style="background:rgba(255,255,255,0.08);">      <tr>        <th> </th> <th>Drilling Pattern</th><th></th>  <th>Mining Operation</th>        </tr>    </thead>    <tbody>      <tr><td> P </td><td> <img src="https://raw.githubusercontent.com/indiancoalchronicles/mining1/refs/heads/main/2022.36.1.jpeg" alt="image loading" style="max-width:290px; height:auto;  border-radius:8px; display:block; margin:10px auto;"></td><td> I </td><td>Drifting </td></tr>      <tr><td> Q </td><td> <img src="https://raw.githubusercontent.com/indiancoalchronicles/mining1/refs/heads/main/2022.36.2.jpeg" alt="image loading" style="max-width:290px; height:auto;  border-radius:8px; display:block; margin:10px auto;"></td><td> II </td><td>Shaft Sinking </td></tr>      <tr><td> R </td><td> <img src="https://raw.githubusercontent.com/indiancoalchronicles/mining1/refs/heads/main/2022.36.3.jpeg" alt="image loading" style="max-width:290px; height:auto;  border-radius:8px; display:block; margin:10px auto;"></td><td> III </td><td>Sublevel stoping </td></tr>      <tr><td> S </td><td> <img src="https://raw.githubusercontent.com/indiancoalchronicles/mining1/refs/heads/main/2022.36.4.jpeg" alt="image loading" style="max-width:290px; height:auto;  border-radius:8px; display:block; margin:10px auto;"></td><td> IV </td><td>Drop Raising </td></tr>      </tbody>  </table> ', options:["P→II, Q→III, R→I, S→II","P→III, Q→IV, R→I, S→II","P→II, Q→I, R→IV, S→III","P→III, Q→IV, R→II, S→I"], answer:3, explanation:" "},
+  {qno:37, section:'MN', type:'mcq', marks:marksForQ(37), question:'The closest match of scatter plot between X and Y with approximate attribute is <br><br><img src="https://raw.githubusercontent.com/indiancoalchronicles/mining1/refs/heads/main/2022.37.jpeg" alt="image loading" style="max-width:390px; height:auto;  border-radius:8px; display:block; margin:10px auto;"> <br><br>  <table border="1" cellspacing="0" cellpadding="6" style="border-collapse:collapse; width:480px; text-align:center; background:rgba(255,255,255,0.03); color:#fff; border:1px solid rgba(255,255,255,0.1);">    <thead style="background:rgba(255,255,255,0.08);">      <tr>        <th> </th>  <th>Attribute</th>        </tr>    </thead>    <tbody>      <tr><td> I </td><td> \\(\\sigma_{x}>\\sigma_{y},0<\\rho_{xy}<1.0\\) </td></tr>     <tr><td> II </td><td> \\(\\sigma_{y}>\\sigma_{x},\\rho_{xy}=1.0\\) </td></tr>      <tr><td> III</td><td> \\(\\sigma_{y}>\\sigma_{x},0<\\rho_{xy}<1.0\\) </td></tr>      <tr><td> IV </td><td> \\(\\sigma_{x}=\\sigma_{y},\\rho_{xy}=1.0\\) </td></tr>               </tbody>  </table><br><br>\\(\\sigma_{x}\\)= Standard deviation of variable X<br>\\(\\sigma_{y}\\)= Standard deviation of variable Y<br>\\(\\rho_{xy}\\)= Pearson’s correlation coefficient between X and Y ', options:["P→I, Q→II, R→III, S→IV","P→II, Q→I, R→IV, S→III","P→III, Q→IV, R→I, S→II","P→IV, Q→II, R→III, S→I"], answer:3, explanation:" "},
+  {qno:38, section:'MN', type:'mcq', marks:marksForQ(38), question: 'A 3-point borehole extensometer is installed to identify the location of a single discontinuity plane in a hanging wall rock by measuring deformations at three locations as shown in the figure. The absolute readings of deformations measured on two different dates are listed in the table. Based on the measured data the most likely inference is<br><br><img src="https://raw.githubusercontent.com/indiancoalchronicles/mining1/refs/heads/main/2022.38.jpeg" alt="image loading" style="max-width:490px; height:auto;  border-radius:8px; display:block; margin:10px auto;"> <br><br>  <table border="1" cellspacing="0" cellpadding="6" style="border-collapse:collapse; width:480px; text-align:center; background:rgba(255,255,255,0.03); color:#fff; border:1px solid rgba(255,255,255,0.1);">    <thead style="background:rgba(255,255,255,0.08);">      <tr>        <th>Date </th> <th>Anchor – 1 (mm)</th><th>Anchor – 2 (mm)</th>  <th>Anchor – 3 (mm)</th>        </tr>    </thead>    <tbody>      <tr><td> May 2, 2021 (initial reading) </td><td> 34.52 </td><td> 29.04 </td><td>43.11 </td></tr>      <tr><td> June 1, 2021 (initial reading) </td><td> 40.56 </td><td> 34.67 </td><td>44.78 </td></tr>      </tbody>  </table>', options:["Discontinuity between Anchor-1 and Anchor-2","Discontinuity between Anchor-2 and Anchor-3","Discontinuity between Anchor-3 and excavation boundary","No noticeable discontinuity"], answer:1, explanation:" "},
+  {qno:39, section:'MN', type:'mcq', marks:marksForQ(39), question:'Match the semi-variogram shape with model name and property <br><br><img src="https://raw.githubusercontent.com/indiancoalchronicles/mining1/refs/heads/main/2022.39.jpeg" alt="image loading" style="max-width:290px; height:auto;  border-radius:8px; display:block; margin:10px auto;"> <br><br>  <table border="1" cellspacing="0" cellpadding="6" style="border-collapse:collapse; width:480px; text-align:center; background:rgba(255,255,255,0.03); color:#fff; border:1px solid rgba(255,255,255,0.1);">    <thead style="background:rgba(255,255,255,0.08);">      <tr>        <th> </th> <th>Semi-variogram model</th><th> </th>  <th>Property</th>        </tr>    </thead>    <tbody>      <tr><td> I </td><td> Pure nugget </td><td> E </td><td>reaches sill at finite range </td></tr>      <tr><td> II </td><td> Exponential </td><td> F </td><td>reaches sill asymptotically </td></tr>      <tr><td> III </td><td> Spherical </td><td> G </td><td>reaches sill instantaneously </td></tr>      <tr><td> IV </td><td> Gaussian</td><td> </td><td> </td></tr>         </tbody>  </table><br><br>\\(\\gamma(h)\\)= semi-variogram<br>\\(h\\)= lag distance', options:["P→III→E, Q→II→F, R→IV→E, S→I→G","P→II→F, Q→I→G, R→III→E, S→IV→E","P→IV→G, Q→III→F, R→II→E, S→I→E","P→II→E, Q→I→E, R→III→F, S→IV→G"], answer:0, explanation:" "},
+  {qno:40, section:'MN', type:'mcq', marks:marksForQ(40), question: 'In a uniaxial compressive strength test, a rock sample of diameter 50 mm fails at an angle of 60o as shown in the figure. If the peak load at failure is 120 kN, the normal and shear stresses on failure plane respectively, in MPa are_______ and _____.<br><br><img src="https://raw.githubusercontent.com/indiancoalchronicles/mining1/refs/heads/main/2022.40.jpeg" alt="image loading" style="max-width:290px; height:auto;  border-radius:8px; display:block; margin:10px auto;">', options:["15.28 and 26.46","26.46 and 15.28","57.02 and −15.28","−15.28 and 15.28"], answer:0, explanation:" "},
+  {qno:41, section:'MN', type:'mcq', marks:marksForQ(41), question: 'A coal mining company examines the option of buying two types of dumpers with the following details. <br><br>  <table border="1" cellspacing="0" cellpadding="6" style="border-collapse:collapse; width:480px; text-align:center; background:rgba(255,255,255,0.03); color:#fff; border:1px solid rgba(255,255,255,0.1);">    <thead style="background:rgba(255,255,255,0.08);">      <tr>        <th>Parameter</th> <th>Type – 1</th><th>Type – 2</th>  <th>Constraints</th>        </tr>    </thead>    <tbody>      <tr><td> Capital cost per dumper (in ₹ crore) </td><td> 3.0 </td><td> 4.0 </td><td>Maximum capital available for purchasing is ₹120 crore </td></tr>      <tr><td> Capacity in tonne </td><td> 40 </td><td> 50 </td><td rowspan="2">Minimum daily tonnage to be hauled is 31,000</td></tr>      <tr><td> Daily trips for each dumper  </td><td> 20 </td><td> 20 </td></tr>      <tr><td> Operating cost (in ₹) per tonne </td><td> 300.0 </td><td> 200.0 </td><td></td></tr>            </tbody>  </table><br><br>In order to minimize the operating cost, the optimum fleet of dumpers of Type-1 and Type-2, respectively are ', options:["20, 15","0, 30","0, 31","40, 0"], answer:0, explanation:" "},
+  {qno:42, section:'MN', type:'nat', marks:marksForQ(42), question:" Let 𝑓(𝑥) be a continuous and differentiable function on [3, 18]. If 𝑓(3) = −50 and 𝑓′(𝑥) ≤ 20, then the largest possible value of 𝑓(18), is_______. (in integer)", answerMin:250, answerMax:250, explanation:" "},
+  {qno:43, section:'MN', type:'nat', marks:marksForQ(43), question:" Let \\(\\frac{dT}{dt} \\propto (T_{R} - T)\\) where \\(T_R\\) and \\(𝑇\\) are temperatures in degree centigrade of a room and thermometer, respectively, and t denotes time in minutes. A thermometer at a reading of \\(2^{\\circ}\\mathrm{C}\\) is brought in a room of temperature \\(40^{\\circ}\\mathrm{C}\\). Two minutes later, the thermometer reads \\(15^{\\circ}\\mathrm{C}\\). The time elapsed in minutes when the thermometer reads \\(39.5^{\\circ}\\mathrm{C}\\), is_______. (round off to two decimal places", answerMin:20.40, answerMax:20.80, explanation:" "},
+  {qno:44, section:'MN', type:'nat', marks:marksForQ(44), question:" In a health centre, the probability of ‘full occupancy’ of COVID beds for a day is 0.8. Assuming Binomial probability distribution, the probability of full occupancy exactly for 5 days in a week, is_______. (round off to three decimal places)", answerMin:0.251, answerMax:0.299, explanation:" "},
+  {qno:45, section:'MN', type:'nat', marks:marksForQ(45), question: 'Following information is given for a drilling operation to be carried out for overburden removal in a surface mine. <br><br>  <table border="1" cellspacing="0" cellpadding="6" style="border-collapse:collapse; width:480px; text-align:center; background:rgba(255,255,255,0.03); color:#fff; border:1px solid rgba(255,255,255,0.1);">    <thead style="background:rgba(255,255,255,0.08);">         </thead>    <tbody>      <tr><td> Volume of rock blasted per round, \\(m^3\\)</td><td> 3,20,000 </td></tr>     <tr><td> Number of blast holes</td><td> 100 </td></tr><tr><td> Drill hole diameter (D), mm</td><td> 200 </td></tr><tr><td>Length of subgrade drilling </td><td> 8D </td></tr><tr><td> Stemming length </td><td> 25D</td></tr><tr><td> Bench height, m</td><td> 30 </td></tr><tr><td> Powder factor, \\(m^{3}/kg\\)</td><td> 3.2 </td></tr>  </tbody>  </table><br><br>The amount of explosive per unit length of charge in kg/m, is_______. (round off to two decimal places) ', answerMin:36.00, answerMax:39.00, explanation:" "},
+  {qno:46, section:'MN', type:'nat', marks:marksForQ(46), question: 'The shaft-top coordinates of two vertical shafts are given below. The depth of the shaft A and B are 200 m and 149 m, respectively.  <br><br>  <table border="1" cellspacing="0" cellpadding="6" style="border-collapse:collapse; width:480px; text-align:center; background:rgba(255,255,255,0.03); color:#fff; border:1px solid rgba(255,255,255,0.1);">    <thead style="background:rgba(255,255,255,0.08);">      <tr>        <th>Shaft</th> <th>Latitude (m)</th><th>Departure (m)</th>  <th>Surface RL (m)</th>        </tr>    </thead>    <tbody>      <tr><td> A </td><td> N670.0 </td><td> W150.0 </td><td>250 </td></tr>      <tr><td> B </td><td> N170.0 </td><td> E50.0 </td><td>209 </td></tr></tbody>  </table><br><br>The downward gradient of the line joining the bottoms of the two shafts in degrees is (round to 2 decimals) ', answerMin:0.90, answerMax:1.13, explanation:" "},
+  {qno:47, section:'MN', type:'nat', marks:marksForQ(47), question:" The oxygen-balanced equation for explosive ANFO is given below. $$ 3NH_{4}NO_{3} + CH_{2} → 7 H_{2}O + CO_{2} + 3 N_{2}$$ For 100 litre of fuel oil having density 850 kg/m3 , the amount of ammonium nitrate to be mixed, in kg, is_______. (round off to two decimal places) ", answerMin:1453.00, answerMax:1458.00, explanation:" "},
+  {qno:48, section:'MN', type:'nat', marks:marksForQ(48), question: 'Two weightless cables of equal length and cross sectional area are hanging from a ceiling as shown in the figure. They are connected by a horizontal light bar of length 1.0 m and pulled by a force, F. The modulus of elasticity of Cable-1 and Cable-2 are 50 GPa and 200 GPa, respectively. If the deformation in both the cables is equal, the distance 𝑥, in m is_______. (round off to one decimal place) <br><br><img src="https://raw.githubusercontent.com/indiancoalchronicles/mining1/refs/heads/main/2022.48.jpeg" alt="image loading" style="max-width:290px; height:auto;  border-radius:8px; display:block; margin:10px auto;">', answerMin:0.8, answerMax:0.8, explanation:" "},
+  {qno:49, section:'MN', type:'nat', marks:marksForQ(49), question:" A circular tunnel of radius 3 m is constructed in a hydrostatic stress field of 15 MPa. The modulus of elasticity and Poisson’s ratio of the rock are 5 GPa and 0.25, respectively. A uniform support pressure \\(\\mathrm{p_{i}}\\) is applied at tunnel boundary to restrict the radial deformation at the tunnel boundary to 4 mm. The value of \\(\\mathrm{p_{i}}\\) in MPa is_______. (round off to two decimal places)", answerMin:9.50, answerMax:9.75, explanation:" "},
+  {qno:50, section:'MN', type:'nat', marks:marksForQ(50), question:" The extraction ratio during development of a bord and pillar panel is 0.15 in a flat coal seam. The panel is further extracted by widening the galleries, and the extraction ratio changes to 0.25. The percentage change in pillar stress, considering tributary area method, is_______. (round off to two decimal places) ", answerMin:13.00, answerMax:14.00, explanation:" "},
+  {qno:51, section:'MN', type:'nat', marks:marksForQ(51), question: 'In a small metal mine a battery powered locomotive hauls a train of mine tubs such that: <br><br>  <table border="1" cellspacing="0" cellpadding="6" style="border-collapse:collapse; width:480px; text-align:center; background:rgba(255,255,255,0.03); color:#fff; border:1px solid rgba(255,255,255,0.1);">    <thead style="background:rgba(255,255,255,0.08);">      </thead>    <tbody>      <tr><td> The weight of the train of mine tubs, tonne</td><td> 3.0 </td></tr>      <tr><td> The coefficient of friction between the wheels and the rails </td><td> 0.06 </td></tr><tr><td> The coefficient of adhesion between the loco wheels and the rails</td><td> 0.2 </td></tr><tr><td> Time required from the start to reach speed of 1.8 m/s through constant acceleration, min</td><td> 3.0 </td></tr><tr><td> Upward gradient to be negotiated </td><td> 1 in 20</td></tr>  </tbody>  </table><br><br>The minimum weight of the locomotive in tonnes to meet these design requirements, is_______. (round off to one decimal place)', answerMin:3.7, answerMax:3.8, explanation:" "},
+  {qno:52, section:'MN', type:'nat', marks:marksForQ(52), question:" A pump lifts mine water of density 1020 \\(kg/m^{3}\\) , at 250 \\(m^{3}/h\\)r from a depth of 150 m. The overall pumping efficiency is 68%. Considering a head loss of 15 m due to pipe friction and shock, the motor input power, in kW is_______. (round off to two decimal places) ", answerMin:165.00, answerMax:170.00, explanation:" "},
+  {qno:53, section:'MN', type:'nat', marks:marksForQ(53), question: 'In a surface mine bench, overburden is removed by the shovel-dumper combination. For the dumper:<br><br>  <table border="1" cellspacing="0" cellpadding="6" style="border-collapse:collapse; width:480px; text-align:center; background:rgba(255,255,255,0.03); color:#fff; border:1px solid rgba(255,255,255,0.1);">    <thead style="background:rgba(255,255,255,0.08);">      </thead>    <tbody>      <tr><td> Time required at the loading station</td><td> 3.0 min </td></tr>      <tr><td> Time required at the unloading station</td><td> 1.0 min </td></tr><tr><td> Distance between loading and unloading stations</td><td> 4.5 km </td></tr><tr><td> Average speed during loaded travel </td><td> 12.0 km/hr </td></tr><tr><td> Average speed during empty travel </td><td> 18.0 km/hr</td></tr>  </tbody>  </table><br><br>Minimum number of dumpers required to avoid idle time of the shovel, is _______. (in integer) ', answerMin:14, answerMax:14, explanation:" "},
+  {qno:54, section:'MN', type:'nat', marks:marksForQ(54), question:" In a bord and pillar development panel, headings of 4.4 m × 2.5 m are advanced using solid blasting. The average pull per round of blast is 1.2 m. On an average 12 faces are blasted per day. Density of coal is 1500 \\(kg/m^{3}\\) . The mine operates in three shifts. If the average daily employment is 330 persons, labour productivity (OMS) of the panel in tonne, is_______. (round off to two decimal places) ", answerMin:0.70, answerMax:0.75, explanation:" "},
+  {qno:55, section:'MN', type:'nat', marks:marksForQ(55), question:" In a longwall face, the full seam thickness of 3 m is cut by a shearer with a web of depth 0.7 m. The hauling speed of shearer during cutting is 12 m/min. The trough cross-section of AFC is 0.4 \\(m^2\\) and the average loading coefficient is 0.7. In order to evacuate coal from the face without spillage, the speed of AFC, in m/s is_______. (round off to one decimal place) ", answerMin:1.4, answerMax:1.6, explanation:" "},
+  {qno:56, section:'MN', type:'nat', marks:marksForQ(56), question:" A city is spread over an area of 20 km × 40 km. Wind, at an average speed of 4 m/s, enters perpendicular to the 20 km long side. On a winter day the inversion layer exists over the city at a height of 100 m. \\(PM_1\\) is emitted from the city at a rate of 1 kg/s. The steady state \\(PM_1\\) concentration in the city air, in \\(µg/m^{3}\\) , assuming Box model, is_______. (round off to one decimal place) ", answerMin:125.0, answerMax:125.0, explanation:" "},
+  {qno:57, section:'MN', type:'nat', marks:marksForQ(57), question: 'The point ‘A’ as shown in the Coward flammability diagram represents the gas composition of a sealed-off area of a coal mine. The volume of the sealed-off area is 10000 \\(m^{3}\\) . Inert gas is proposed to be injected into the sealed-off area so that the gas composition comes below the LEL (lower explosibility limit). The minimum volume of the inert gas required (at the same pressure as that of the sealed-off area), in \\(m^{3}\\) is_______. (round off to one decimal place)<br><br><img src="https://raw.githubusercontent.com/indiancoalchronicles/mining1/refs/heads/main/2022.57.jpeg" alt="image loading" style="max-width:290px; height:auto;  border-radius:8px; display:block; margin:10px auto;">', answerMin:2000.0, answerMax:2400.0, explanation:" "},
+  {qno:58, section:'MN', type:'nat', marks:marksForQ(58), question:" An underground workshop has dimensions of 8 m length, 6 m width and 4 m height. Four identical luminaires are placed at the four corners of the roof. Each luminaire is of 100 W capacity with luminous efficacy of 100 lumen/W. Light is transmitted spherically from luminaires and there are no reflections. The illumination on the horizontal plane at the centre of the floor, in lux is_______. (round off to two decimal places) ", answerMin:45.00, answerMax:50.00, explanation:" "}, 
+  {qno:59, section:'MN', type:'nat', marks:marksForQ(59), question:" An underground AC plant requires the delivery of 250 US gpm (15.85 US gpm = 1.0 lps) of chilled water. For this purpose, ice-pellets at \\(0^{\\circ}\\mathrm{C}\\)  temperature (latent heat of melting, 334 kJ/kg) are mixed with water at \\(20^{\\circ}\\mathrm{C}\\) (specific heat 4.18 \\(\\mathrm{\\frac{kJ}{kg^\\circ C}}\\)) on the surface. The mixture is adiabatically transported to the underground location such that the water at \\(7^{\\circ}\\mathrm{C}\\) becomes available for the AC plant. The requirement of ice-pellets in tonne/hr to meet the design condition, is ______. (round off to two decimal places) ", answerMin:7.00, answerMax:7.50, explanation:" "},
+  {qno:60, section:'MN', type:'nat', marks:marksForQ(60), question:"An intake shaft has resistance 0.05 \\(Ns^{2}/m^{8}\\) up to a depth of 400 m. The airflow rate is 100 \\(m^{3}/s\\) and the average density is 1.2 \\(kg/m^{3}\\) . A barometer reads 99.375 kPa when placed on surface. Considering acceleration due to gravity is 9.81 \\(m/s^{2}\\) , the reading of the barometer at the depth of 400 m, in kPa is_______. (round off to two decimal places) ", answerMin:103.50, answerMax:103.60,  explanation:" "},
+  {qno:61, section:'MN', type:'nat', marks:marksForQ(61), question:" The net present values (NPV) of two mining project proposals A and B are as given. $$NPV_{A} = −0.01 i^{2} − 0.02 i + 4.44$$ $$NPV_{B} = −0.03 i^{2} − 0.01 i + 6.55$$ where, \\(i\\) is discount rate. <br><br> The required rate of return for which both the proposals have equal possibility of acceptance and rejection, is _______. (round off to two decimal places) ", answerMin:10.00, answerMax:11.00, explanation:" "},
+  {qno:62, section:'MN', type:'nat', marks:marksForQ(62), question:"Value of \\(\\int_0^1 x\\log(1+x)\\,dx\\) is is_______. (round off to two decimal places) ", answerMin:0.25, answerMax:0.35, explanation:" "},
+  {qno:63, section:'MN', type:'nat', marks:marksForQ(63), question: 'A coal seam of uniform thickness 12 m is dipping at an angle \\(30^\\circ\\)  as shown in the figure. The ultimate pit is demarcated based on allowable instantaneous stripping ratio of 10 \\(m^{3} /tonne\\) and safe slope angle of \\(45^\\circ\\) . The density of coal is 1.41 \\(tonne/m^{3}\\) . The length, L in m is_______. (round off to two decimal places)<br><br><img src="https://raw.githubusercontent.com/indiancoalchronicles/mining1/refs/heads/main/2022.63.jpeg" alt="image loading" style="max-width:490px; height:auto;  border-radius:8px; display:block; margin:10px auto;">', answerMin:320.00, answerMax:330.00,  explanation:" "},
+  {qno:64, section:'MN', type:'nat', marks:marksForQ(64), question:" A mine has a reserve of 150 million tonne (Mt) and is designed for a maximum production capacity of 5 Mt per year. In the first year the production is 2 Mt and it increases by 20% each year. The reserve in Mt that remains at the end of 15 years, is_______. (round off to two decimal places) ", answerMin:84.80, answerMax:85.50, explanation:" "},
+  {qno:65, section:'MN', type:'nat', marks:marksForQ(65), question: 'Information on Activity-Time duration of a project is provided below<br><br>  <table border="1" cellspacing="0" cellpadding="6" style="border-collapse:collapse; width:480px; text-align:center; background:rgba(255,255,255,0.03); color:#fff; border:1px solid rgba(255,255,255,0.1);">    <thead style="background:rgba(255,255,255,0.08);">      <tr>        <th rowspan="2">Activity</th><th rowspan="2">Predecessor event</th><th rowspan="2">Successor event</th><th colspan="3">Estimated Time Duration (weeks)</th>        </tr>    </thead>    <tbody>      <tr><td> Pessimistic </td><td> Most likely </td><td> Optimistic </td></tr>      <tr><td>A</td><td>1</td><td>2</td><td>20</td><td>15</td><td>4</td></tr>      <tr><td>B</td><td>1</td><td>3</td><td>12</td><td>8</td><td>4</td></tr> <tr><td>C</td><td>2</td><td>3</td><td>16</td><td>11</td><td>6</td></tr> <tr><td>D</td><td>3</td><td>4</td><td>20</td><td>13</td><td>12</td></tr> <tr><td>E</td><td>2</td><td>4</td><td>13</td><td>8</td><td>3</td></tr> <tr><td>F</td><td>1</td><td>4</td><td>45</td><td>35</td><td>25</td></tr> </tbody>  </table><br><br> The expected project duration in weeks, is_______. (in integer) ', answerMin:39, answerMax:39, explanation:" "}
+];
+
+/* --------------------------
+   STATE
+--------------------------- */
+let state = {
+  started: false,
+  remainingSec: 180 * 60,
+  timerInterval: null,
+  currentIndex: 0,
+  answers: new Array(QUESTIONS.length).fill(null),
+  review: new Array(QUESTIONS.length).fill(false),
+  visited: new Array(QUESTIONS.length).fill(false),
+  submitted: false
+};
+
+/* --------------------------
+   DOM refs
+--------------------------- */
+const welcomeEl = document.getElementById('welcome');
+const startBtn = document.getElementById('startBtn');
+const quizUI = document.getElementById('quizUI');
+const qnumEl = document.getElementById('qnum');
+const qtextEl = document.getElementById('qtext');
+const optionsEl = document.getElementById('options');
+const timerEl = document.getElementById('timer');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const clearBtn = document.getElementById('clearBtn');
+// save & mark button removed
+const reviewNextBtn = document.getElementById('reviewNextBtn');
+const qmarksEl = document.getElementById('qmarks');
+const paletteEl = document.getElementById('palette');
+const submitBtn = document.getElementById('submitBtn');
+const liveInfo = document.getElementById('liveInfo');
+const explainEl = document.getElementById('explain');
+const reviewUI = document.getElementById('reviewUI');
+const finalScoreEl = document.getElementById('finalScore');
+const reviewListEl = document.getElementById('reviewList');
+
+const countAnsweredEl = document.getElementById('count-answered');
+const countNotAnsweredEl = document.getElementById('count-not-answered');
+const countNotVisitedEl = document.getElementById('count-not-visited');
+const countReviewEl = document.getElementById('count-review');
+
+
+/* --------------------------
+   TIMER UTIL
+--------------------------- */
+function formatTime(sec){
+  const h = String(Math.floor(sec/3600)).padStart(2,'0');
+  const m = String(Math.floor((sec%3600)/60)).padStart(2,'0');
+  const s = String(sec%60).padStart(2,'0');
+  return `${h}:${m}:${s}`;
+}
+
+function startTimer(){
+  if (state.timerInterval) clearInterval(state.timerInterval);
+  state.timerInterval = setInterval(() => {
+    state.remainingSec--;
+    timerEl.textContent = formatTime(state.remainingSec);
+    if (state.remainingSec <= 0){
+      clearInterval(state.timerInterval);
+      showSubmissionModal('Time is up — the exam will be submitted automatically.', submitExam, true);
+    }
+  }, 1000);
+}
+
+/* --------------------------
+   PALETTE BUILD + STATE UPDATES
+--------------------------- */
+
+function buildPalette(){
+  paletteEl.innerHTML = "";
+  QUESTIONS.forEach((q,i) => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'pmini';
+    btn.dataset.index = i;
+    btn.textContent = i+1;
+    btn.addEventListener('click', ()=> {
+      saveAnswer();
+      gotoQuestion(i);
+    });
+    paletteEl.appendChild(btn);
+  });
+  updatePaletteState();
+}
+
+function updatePaletteState(){
+  paletteEl.querySelectorAll('.pmini').forEach(btn => {
+    const i = Number(btn.dataset.index);
+    btn.classList.remove('answered','not-answered','review','active');
+    if (i === state.currentIndex){
+      btn.classList.add('active');
+    }
+    if (state.review[i]){
+      btn.classList.add('review');
+    }
+    if (!state.visited[i]){
+      btn.style.background = '';
+    } else {
+      if (state.answers[i] !== null && state.answers[i] !== undefined){
+        btn.classList.add('answered');
+      } else {
+        btn.classList.add('not-answered');
+      }
+    }
+  });
+
+  let answeredCount = state.answers.filter(a=>a!==null && a!==undefined).length;
+  let notVisitedCount = state.visited.filter(v=>!v).length;
+  let notAnsweredCount = state.visited.filter((v,i)=>v && (state.answers[i]===null || state.answers[i]===undefined)).length;
+  let reviewCount = state.review.filter(Boolean).length;
+
+  if (countAnsweredEl) countAnsweredEl.textContent = `(${answeredCount})`;
+  if (countNotAnsweredEl) countNotAnsweredEl.textContent = `(${notAnsweredCount})`;
+  if (countNotVisitedEl) countNotVisitedEl.textContent = `(${notVisitedCount})`;
+  if (countReviewEl) countReviewEl.textContent = `(${reviewCount})`;
+}
+
+/* --------------------------
+   NAVIGATION helpers
+--------------------------- */
+function gotoQuestion(index){
+  if (index < 0) index = 0;
+  if (index >= QUESTIONS.length) index = QUESTIONS.length - 1;
+  state.currentIndex = index;
+  state.visited[index] = true;
+  renderQuestion();
+  updatePaletteState();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* --------------------------
+   RENDER QUESTION
+--------------------------- */
+function renderQuestion(){
+  if (!state.started){ state.started = true; startTimer(); }
+
+  const q = QUESTIONS[state.currentIndex];
+  qnumEl.textContent = `Question ${q.qno} / ${QUESTIONS.length}`;
+  qtextEl.innerHTML = q.question;
+  qmarksEl.textContent = `${q.marks} mark${q.marks>1?'s':''} • ${q.type.toUpperCase()}`;
+
+  explainEl.classList.add('hidden');
+  explainEl.textContent = '';
+
+  optionsEl.innerHTML = '';
+
+  if (q.type === 'mcq'){
+    q.options.forEach((opt, idx) => {
+      const wrap = document.createElement('div');
+      wrap.className = 'opt';
+      const inputId = `opt_${state.currentIndex}_${idx}`;
+      wrap.innerHTML = `<input type="radio" id="${inputId}" name="opt" value="${idx}"><label for="${inputId}">${opt}</label>`;
+      wrap.addEventListener('click', ()=> {
+        optionsEl.querySelectorAll('.opt').forEach(o=>o.classList.remove('selected'));
+        wrap.classList.add('selected');
+        const radio = document.getElementById(inputId);
+        if (radio) radio.checked = true;
+      });
+      optionsEl.appendChild(wrap);
+    });
+    const a = state.answers[state.currentIndex];
+    if (a !== null && typeof a === 'number'){
+      const el = document.getElementById(`opt_${state.currentIndex}_${a}`);
+      if (el){ el.checked = true; el.parentElement.classList.add('selected'); }
+    }
+  } else if (q.type === 'msq'){
+    q.options.forEach((opt, idx) => {
+      const wrap = document.createElement('div');
+      wrap.className = 'opt';
+      const inputId = `ms_${state.currentIndex}_${idx}`;
+      wrap.innerHTML = `<input type="checkbox" id="${inputId}" name="optms" value="${idx}"><label for="${inputId}">${opt}</label>`;
+      wrap.addEventListener('click', ()=> {
+        wrap.classList.toggle('selected');
+        const cb = wrap.querySelector('input');
+        cb.checked = !cb.checked;
+      });
+      optionsEl.appendChild(wrap);
+    });
+    const a = state.answers[state.currentIndex];
+    if (Array.isArray(a)){
+      a.forEach(i => {
+        const el = document.getElementById(`ms_${state.currentIndex}_${i}`);
+        if (el){ el.checked = true; el.parentElement.classList.add('selected'); }
+      });
+    }
+  } else if (q.type === 'nat'){
+    const wrap = document.createElement('div');
+    wrap.className = 'opt';
+    const inputId = `nat_${state.currentIndex}`;
+    wrap.innerHTML = `<input id="${inputId}" type="number" step="any" style="width:160px;padding:8px;border-radius:6px;border:none;background:transparent;color:#000" placeholder="Enter numeric answer">`;
+    optionsEl.appendChild(wrap);
+    const a = state.answers[state.currentIndex];
+    if (a !== null && a !== undefined){
+      document.getElementById(inputId).value = a;
+    }
+  }
+
+  if (typeof renderMathInElement === "function") {
+    try {
+      renderMathInElement(qtextEl, {
+        delimiters: [
+          { left: "$$", right: "$$", display: true },
+          { left: "\\(", right: "\\)", display: false }
+        ]
+      });
+      renderMathInElement(optionsEl, {
+        delimiters: [
+          { left: "$$", right: "$$", display: true },
+          { left: "\\(", right: "\\)", display: false }
+        ]
+      });
+    } catch (e) { }
+  }
+
+  updatePaletteState();
+}
+
+/* --------------------------
+   SAVE / CLEAR / BUTTON ACTIONS
+--------------------------- */
+function saveAnswer(){
+  const q = QUESTIONS[state.currentIndex];
+  if (q.type === 'mcq'){
+    const el = optionsEl.querySelector(`input[type="radio"]:checked`);
+    state.answers[state.currentIndex] = el ? Number(el.value) : null;
+  } else if (q.type === 'msq'){
+    const checked = Array.from(optionsEl.querySelectorAll(`input[type="checkbox"]:checked`)).map(x=>Number(x.value));
+    state.answers[state.currentIndex] = checked.length ? checked : null;
+  } else if (q.type === 'nat'){
+    const el = document.getElementById(`nat_${state.currentIndex}`);
+    if (!el) { state.answers[state.currentIndex] = null; return; }
+    const v = el.value;
+    state.answers[state.currentIndex] = (v === '') ? null : Number(v);
+  }
+  state.visited[state.currentIndex] = true;
+  updatePaletteState();
+  liveInfo.textContent = 'Answers Saved';
+}
+
+clearBtn.addEventListener('click', () => {
+  state.answers[state.currentIndex] = null;
+  state.review[state.currentIndex] = false;
+  state.visited[state.currentIndex] = true;
+  document.querySelectorAll('.opt').forEach(o => {
+    o.classList.remove('selected');
+    const inp = o.querySelector('input');
+    if (inp) inp.checked = false;
+  });
+  const nat = document.getElementById(`nat_${state.currentIndex}`);
+  if (nat) nat.value = '';
+  updatePaletteState();
+});
+
+prevBtn.addEventListener('click', () => {
+  saveAnswer();
+  gotoQuestion(state.currentIndex - 1);
+});
+nextBtn.addEventListener('click', () => {
+  saveAnswer();
+  gotoQuestion(state.currentIndex + 1);
+});
+reviewNextBtn.addEventListener('click', () => {
+  saveAnswer();
+  state.review[state.currentIndex] = true;
+  state.visited[state.currentIndex] = true;
+  gotoQuestion(state.currentIndex + 1);
+  updatePaletteState();
+});
+
+/* --------------------------
+   CORRECTNESS (handles range-based NATs)
+--------------------------- */
+function isCorrect(idx){
+  const q = QUESTIONS[idx];
+  const ans = state.answers[idx];
+  if (ans === null || ans === undefined) return false;
+  if (q.type === 'mcq'){
+    return ans === q.answer;
+  } else if (q.type === 'msq'){
+    const correct = new Set(q.answerMulti || []);
+    const user = new Set(Array.isArray(ans) ? ans : []);
+    if (user.size !== correct.size) return false;
+    for (let v of correct) if (!user.has(v)) return false;
+    return true;
+  } else if (q.type === 'nat') {
+    const user = Number(ans);
+    if (isNaN(user)) return false;
+
+    // If explicit range provided, use it (inclusive)
+    if (q.answerMin !== undefined && q.answerMax !== undefined) {
+        return user >= q.answerMin && user <= q.answerMax;
+    }
+
+    // Fallback to exact match if only answerNum present
+    if (q.answerNum !== undefined) {
+        return Math.abs(user - Number(q.answerNum)) <= 1e-6;
+    }
+
+    return false;
+  }
+  return false;
+}
+
+/* --------------------------
+   SCORING
+--------------------------- */
+function computeScore(){
+  let total = 0;
+  for (let i=0;i<QUESTIONS.length;i++){
+    const q = QUESTIONS[i];
+    const a = state.answers[i];
+    if (a === null || a === undefined) continue;
+    if (q.type === 'mcq'){
+      if (a === q.answer) total += q.marks;
+      else total -= negativeForQ(q.qno);
+    } else if (q.type === 'msq'){
+      if (isCorrect(i)) total += q.marks;
+    } else if (q.type === 'nat'){
+      if (isCorrect(i)) total += q.marks;
+    }
+  }
+  total = Math.round((total + Number.EPSILON) * 100) / 100;
+  if (total < 0) total = 0;
+  return total;
+}
+function maxPossibleScore(){
+  return QUESTIONS.reduce((s,q)=> s + q.marks, 0);
+}
+
+/* --------------------------
+   SUBMIT & REVIEW
+--------------------------- */
+submitBtn.addEventListener('click', ()=> {
+  if (!confirm('Submit exam now? You will not be able to change answers after submitting.')) return;
+  saveAnswer();
+  submitExam();
+});
+
+function showSubmissionModal(message, actionFn, autoAction=false){
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  const modal = document.createElement('div');
+  modal.className = 'modal';
+  modal.innerHTML = `<h2>Exam Submission</h2><p style="margin-top:8px">${message}</p>`;
+  const btn = document.createElement('button');
+  btn.className = 'btn ghostt';
+  btn.textContent = 'View Results';
+  btn.addEventListener('click', () => {
+    overlay.remove();
+    actionFn();
+  });
+  modal.appendChild(btn);
+  overlay.appendChild(modal);
+  document.body.appendChild(overlay);
+  if (autoAction){
+    setTimeout(()=> {
+      if (overlay.parentNode) overlay.remove();
+      actionFn();
+    }, 1200);
+  }
+}
+
+function submitExam(){
+  if (state.timerInterval) clearInterval(state.timerInterval);
+  state.submitted = true;
+  const score = computeScore();
+  const maxScore = maxPossibleScore();
+
+  document.getElementById('quizUI').classList.add('hidden');
+  reviewUI.style.display = 'block';
+  reviewUI.setAttribute('aria-hidden', 'false');
+
+  finalScoreEl.textContent = `Your Final Score: ${score.toFixed(2)} / ${maxScore}  (${Math.round((score/maxScore)*10000)/100}%)`;
+
+  reviewListEl.innerHTML = '';
+  QUESTIONS.forEach((q, i) => {
+    const wrap = document.createElement('div');
+    wrap.style.padding = '8px';
+    wrap.style.borderBottom = '1px solid rgba(255,255,255,0.03)';
+
+    const title = document.createElement('div');
+    title.innerHTML = `<strong>Q${q.qno} (${q.type.toUpperCase()}, ${q.marks}m) — ${q.section}${q.subtype? ' / ' + q.subtype : ''}</strong>`;
+    wrap.appendChild(title);
+
+    const qt = document.createElement('div');
+    qt.style.margin = '6px 0';
+    qt.innerHTML = q.question;
+    wrap.appendChild(qt);
+
+    if (q.type === 'mcq' || q.type === 'msq'){
+      const ul = document.createElement('ul');
+      q.options.forEach((opt, idx) => {
+        const li = document.createElement('li');
+        const correct = (q.type === 'mcq') ? (idx === q.answer) : (Array.isArray(q.answerMulti) && q.answerMulti.includes(idx));
+        const userSelected = (q.type === 'mcq') ? (state.answers[i] === idx) : (Array.isArray(state.answers[i]) && state.answers[i].includes(idx));
+        li.innerHTML = `${String.fromCharCode(65+idx)}. ${opt}`;
+        if (correct) li.style.color = 'var(--accent)';
+        if (userSelected && !correct) li.style.color = 'var(--wrong)';
+        if (userSelected && correct) li.style.fontWeight = '800';
+        ul.appendChild(li);
+      });
+      wrap.appendChild(ul);
+    } else if (q.type === 'nat'){
+      const p = document.createElement('div');
+      const correctText = (q.answerNum !== undefined) ? q.answerNum : ((q.answerMin !== undefined && q.answerMax !== undefined) ? `${q.answerMin} to ${q.answerMax}` : 'N/A');
+      p.innerHTML = `<strong>Correct:</strong> ${correctText} &nbsp;&nbsp; <strong>Your answer:</strong> ${state.answers[i] !== null && state.answers[i] !== undefined ? state.answers[i] : 'No answer'}`;
+      wrap.appendChild(p);
+    }
+
+    if (q.explanation){
+      const ex = document.createElement('div');
+      ex.style.marginTop = '6px';
+      ex.style.color = 'var(--muted)';
+      ex.innerHTML = `Explanation: ${q.explanation}`;
+      wrap.appendChild(ex);
+    }
+
+    reviewListEl.appendChild(wrap);
+  });
+
+  if (typeof renderMathInElement === "function") {
+    try {
+      renderMathInElement(reviewListEl, {
+        delimiters: [
+          { left: "$$", right: "$$", display: true },
+          { left: "\\(", right: "\\)", display: false }
+        ]
+      });
+    } catch(e) { }
+  }
+
+  showSubmissionModal(`You scored ${score.toFixed(2)} out of ${maxScore}.`, ()=> {
+    finalScoreEl.scrollIntoView({behavior:'smooth'});
+  }, false);
+}
+
+/* --------------------------
+   START QUIZ
+--------------------------- */
+startBtn.addEventListener('click', ()=>{ 
+  welcomeEl.classList.add('hidden');
+  quizUI.classList.remove('hidden');
+  quizUI.setAttribute('aria-hidden', 'false');
+  buildPalette();
+  gotoQuestion(0);
+  timerEl.textContent = formatTime(state.remainingSec);
+});
+
+/* KEYBOARD NAV */
+window.addEventListener('keydown', (e)=>{ 
+  if (state.submitted) return;
+  if (e.key === 'ArrowLeft'){ saveAnswer(); gotoQuestion(state.currentIndex - 1); }
+  if (e.key === 'ArrowRight'){ saveAnswer(); gotoQuestion(state.currentIndex + 1); }
+});
+
+/* initialize no-op until start */
+function init(){ }
+init();
+</script>
+</body>
+</html>
