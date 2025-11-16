@@ -160,8 +160,91 @@ html,body{  height:100%;  font-family: "Times New Roman", Times, serif;  backgro
 .submit-area{text-align:center;margin-top:12px}
 .result-wrap{text-align:center;margin-top:16px;color:var(--muted)}
 .review-ui{display:none;margin-top:18px}
-.answer-correct{color:var(--accent);font-weight:700}
-.answer-wrong{color:var(--wrong);font-weight:700}
+
+/* NEW: Make review UI white + black like question area */
+.review-ui{
+  background: #ffffff;
+  color: #000;
+  padding: 18px;
+  border-radius: 10px;
+  border: 1px solid rgba(0,0,0,0.06);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+}
+/* ensure all text inside review UI is black & backgrounds white */
+.review-ui *{
+  color: #000 !important;
+  background: transparent !important;
+}
+
+/* ensure tables inside review area have the same black-on-white styling and solid borders */
+.review-ui table,
+.review-ui thead,
+.review-ui tbody,
+.review-ui tfoot,
+.review-ui th,
+.review-ui td,
+.review-ui tr {
+  color: #000 !important;
+  background: #fff !important;
+  border-color: #000 !important;
+  border: 1px solid rgba(0,0,0,0.9) !important;
+  border-collapse: collapse !important;
+  padding:6px !important;
+}
+.review-ui table {
+  border-collapse: collapse !important;
+  width: 100% !important;
+}
+.review-ui thead th {
+  background: #f7f7f7 !important;
+  color: #000 !important;
+  font-weight:700 !important;
+}
+
+/* review list items */
+#reviewList > div{
+  background: #fff;
+  color: #000;
+  padding: 12px;
+  margin-bottom: 8px;
+  border-radius: 8px;
+  border: 1px solid rgba(0,0,0,0.06);
+}
+
+/* Highlighting classes for options after submission (added exactly for your request) */
+.review-option{
+  display:block;
+  padding:10px 12px;
+  border-radius:8px;
+  margin:6px 0;
+  border:1px solid rgba(0,0,0,0.06);
+  background:#fff;
+  color:#000;
+}
+.review-option.correct{
+  background:#dff7df; /* light green */
+  border:1px solid var(--correct);
+  color:#000;
+  font-weight:700;
+}
+.review-option.wrong{
+  background:#ffecec; /* light red */
+  border:1px solid var(--wrong);
+  color:#000;
+  font-weight:700;
+}
+.review-option.selected{
+  outline:2px dashed rgba(0,0,0,0.08);
+}
+.correct-badge{display:inline-block;padding:2px 8px;border-radius:12px;background:var(--correct);color:#000;font-weight:700;margin-left:8px;font-size:12px}
+.wrong-badge{display:inline-block;padding:2px 8px;border-radius:12px;background:var(--wrong);color:#000;font-weight:700;margin-left:8px;font-size:12px}
+
+/* final score display should be black on white */
+#finalScore{
+  color: #000 !important;
+  font-weight:700;
+}
+
 .footer{margin-top:10px;font-size:12px;color:var(--muted);text-align:center}
 .hidden{display:none}
 .modal-overlay{
@@ -281,9 +364,9 @@ html,body{  height:100%;  font-family: "Times New Roman", Times, serif;  backgro
 
     <!-- REVIEW -->
     <div id="reviewUI" class="review-ui" aria-hidden="true">
-      <h2 style="color:var(--accent);text-align:center">Exam Completed</h2>
-      <div id="finalScore" style="font-size:1.4rem;text-align:center;margin-top:8px;color:#ffd700"></div>
-      <div id="reviewList" style="margin-top:12px;overflow:auto;padding:8px;border-top:1px solid rgba(255,255,255,0.03)"></div>
+      <h2 style="color:#000;text-align:center">Exam Completed</h2>
+      <div id="finalScore" style="font-size:1.4rem;text-align:center;margin-top:8px;color:#000"></div>
+      <div id="reviewList" style="margin-top:12px;overflow:auto;padding:8px;border-top:1px solid rgba(0,0,0,0.03)"></div>
     </div>
 
   </div>
@@ -369,12 +452,10 @@ const QUESTIONS = [
   {qno:62, section:'MN', type:'nat', marks:marksForQ(62), question:"Value of \\(\\int_0^1 x\\log(1+x)\\,dx\\) is is_______. (round off to two decimal places) ", answerMin:0.25, answerMax:0.35, explanation:" "},
   {qno:63, section:'MN', type:'nat', marks:marksForQ(63), question: 'A coal seam of uniform thickness 12 m is dipping at an angle \\(30^\\circ\\)  as shown in the figure. The ultimate pit is demarcated based on allowable instantaneous stripping ratio of 10 \\(m^{3} /tonne\\) and safe slope angle of \\(45^\\circ\\) . The density of coal is 1.41 \\(tonne/m^{3}\\) . The length, L in m is_______. (round off to two decimal places)<br><br><img src="https://raw.githubusercontent.com/indiancoalchronicles/mining1/refs/heads/main/2022.63.jpeg" alt="image loading" style="max-width:490px; height:auto;  border-radius:8px; display:block; margin:10px auto;">', answerMin:320.00, answerMax:330.00,  explanation:" "},
   {qno:64, section:'MN', type:'nat', marks:marksForQ(64), question:" A mine has a reserve of 150 million tonne (Mt) and is designed for a maximum production capacity of 5 Mt per year. In the first year the production is 2 Mt and it increases by 20% each year. The reserve in Mt that remains at the end of 15 years, is_______. (round off to two decimal places) ", answerMin:84.80, answerMax:85.50, explanation:" "},
-  {qno:65, section:'MN', type:'nat', marks:marksForQ(65), question: 'Information on Activity-Time duration of a project is provided below<br><br>  <table border="1" cellspacing="0" cellpadding="6" style="border-collapse:collapse; width:480px; text-align:center; background:rgba(255,255,255,0.03); color:#fff; border:1px solid rgba(255,255,255,0.1);">    <thead style="background:rgba(255,255,255,0.08);">      <tr>        <th rowspan="2">Activity</th><th rowspan="2">Predecessor event</th><th rowspan="2">Successor event</th><th colspan="3">Estimated Time Duration (weeks)</th>        </tr>    </thead>    <tbody>      <tr><td> Pessimistic </td><td> Most likely </td><td> Optimistic </td></tr>      <tr><td>A</td><td>1</td><td>2</td><td>20</td><td>15</td><td>4</td></tr>      <tr><td>B</td><td>1</td><td>3</td><td>12</td><td>8</td><td>4</td></tr> <tr><td>C</td><td>2</td><td>3</td><td>16</td><td>11</td><td>6</td></tr> <tr><td>D</td><td>3</td><td>4</td><td>20</td><td>13</td><td>12</td></tr> <tr><td>E</td><td>2</td><td>4</td><td>13</td><td>8</td><td>3</td></tr> <tr><td>F</td><td>1</td><td>4</td><td>45</td><td>35</td><td>25</td></tr> </tbody>  </table><br><br> The expected project duration in weeks, is_______. (in integer) ', answerMin:39, answerMax:39, explanation:" "}
+  {qno:65, section:'MN', type:'nat', marks:marksForQ(65), question: 'Information on Activity-Time duration of a project is provided below<br><br>  <table border="1" cellspacing="0" cellpadding="6" style="border-collapse:collapse; width:480px; text-align:center; background:rgba(255,255,255,0.03); color:#fff; border:1px solid rgba(255,255,255,0.1);">    <thead style="background:rgba(255,255,255,0.08);">          </thead>    <tbody>   <tr>        <td rowspan="2">Activity</td><td rowspan="2">Predecessor event</td><td rowspan="2">Successor event</td><td colspan="3">Estimated Time Duration (weeks)</td>        </tr>   <tr><td> Pessimistic </td><td> Most likely </td><td> Optimistic </td></tr>      <tr><td>A</td><td>1</td><td>2</td><td>20</td><td>15</td><td>4</td></tr>      <tr><td>B</td><td>1</td><td>3</td><td>12</td><td>8</td><td>4</td></tr> <tr><td>C</td><td>2</td><td>3</td><td>16</td><td>11</td><td>6</td></tr> <tr><td>D</td><td>3</td><td>4</td><td>20</td><td>13</td><td>12</td></tr> <tr><td>E</td><td>2</td><td>4</td><td>13</td><td>8</td><td>3</td></tr> <tr><td>F</td><td>1</td><td>4</td><td>45</td><td>35</td><td>25</td></tr> </tbody>  </table><br><br> The expected project duration in weeks, is_______. (in integer) ', answerMin:39, answerMax:39, explanation:" "}
 ];
 
-/* --------------------------
-   STATE
---------------------------- */
+/* STATE */
 let state = {
   started: false,
   remainingSec: 180 * 60,
@@ -386,9 +467,7 @@ let state = {
   submitted: false
 };
 
-/* --------------------------
-   DOM refs
---------------------------- */
+/* DOM refs */
 const welcomeEl = document.getElementById('welcome');
 const startBtn = document.getElementById('startBtn');
 const quizUI = document.getElementById('quizUI');
@@ -399,7 +478,6 @@ const timerEl = document.getElementById('timer');
 const prevBtn = document.getElementById('prevBtn');
 const nextBtn = document.getElementById('nextBtn');
 const clearBtn = document.getElementById('clearBtn');
-// save & mark button removed
 const reviewNextBtn = document.getElementById('reviewNextBtn');
 const qmarksEl = document.getElementById('qmarks');
 const paletteEl = document.getElementById('palette');
@@ -415,21 +493,19 @@ const countNotAnsweredEl = document.getElementById('count-not-answered');
 const countNotVisitedEl = document.getElementById('count-not-visited');
 const countReviewEl = document.getElementById('count-review');
 
-
-/* --------------------------
-   TIMER UTIL
---------------------------- */
+/* TIMER */
 function formatTime(sec){
   const h = String(Math.floor(sec/3600)).padStart(2,'0');
   const m = String(Math.floor((sec%3600)/60)).padStart(2,'0');
   const s = String(sec%60).padStart(2,'0');
   return `${h}:${m}:${s}`;
 }
-
 function startTimer(){
   if (state.timerInterval) clearInterval(state.timerInterval);
+  const endTime = Date.now() + state.remainingSec * 1000;
   state.timerInterval = setInterval(() => {
-    state.remainingSec--;
+    const now = Date.now();
+    state.remainingSec = Math.max(0, Math.round((endTime - now) / 1000));
     timerEl.textContent = formatTime(state.remainingSec);
     if (state.remainingSec <= 0){
       clearInterval(state.timerInterval);
@@ -438,10 +514,7 @@ function startTimer(){
   }, 1000);
 }
 
-/* --------------------------
-   PALETTE BUILD + STATE UPDATES
---------------------------- */
-
+/* PALETTE + STATE UPDATES */
 function buildPalette(){
   paletteEl.innerHTML = "";
   QUESTIONS.forEach((q,i) => {
@@ -449,6 +522,7 @@ function buildPalette(){
     btn.type = 'button';
     btn.className = 'pmini';
     btn.dataset.index = i;
+    btn.setAttribute('aria-label', 'Question ' + (i+1));
     btn.textContent = i+1;
     btn.addEventListener('click', ()=> {
       saveAnswer();
@@ -458,25 +532,20 @@ function buildPalette(){
   });
   updatePaletteState();
 }
-
 function updatePaletteState(){
   paletteEl.querySelectorAll('.pmini').forEach(btn => {
     const i = Number(btn.dataset.index);
     btn.classList.remove('answered','not-answered','review','active');
+    btn.removeAttribute('aria-pressed');
     if (i === state.currentIndex){
       btn.classList.add('active');
+      btn.setAttribute('aria-pressed','true');
     }
-    if (state.review[i]){
-      btn.classList.add('review');
-    }
-    if (!state.visited[i]){
-      btn.style.background = '';
-    } else {
-      if (state.answers[i] !== null && state.answers[i] !== undefined){
-        btn.classList.add('answered');
-      } else {
-        btn.classList.add('not-answered');
-      }
+    if (state.review[i]) btn.classList.add('review');
+    if (!state.visited[i]) btn.style.background = '';
+    else {
+      if (state.answers[i] !== null && state.answers[i] !== undefined) btn.classList.add('answered');
+      else btn.classList.add('not-answered');
     }
   });
 
@@ -491,9 +560,7 @@ function updatePaletteState(){
   if (countReviewEl) countReviewEl.textContent = `(${reviewCount})`;
 }
 
-/* --------------------------
-   NAVIGATION helpers
---------------------------- */
+/* NAVIGATION */
 function gotoQuestion(index){
   if (index < 0) index = 0;
   if (index >= QUESTIONS.length) index = QUESTIONS.length - 1;
@@ -504,9 +571,7 @@ function gotoQuestion(index){
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
-/* --------------------------
-   RENDER QUESTION
---------------------------- */
+/* RENDER */
 function renderQuestion(){
   if (!state.started){ state.started = true; startTimer(); }
 
@@ -519,6 +584,11 @@ function renderQuestion(){
   explainEl.textContent = '';
 
   optionsEl.innerHTML = '';
+
+  // lazy images inside qtext
+  qtextEl.querySelectorAll('img').forEach(img => {
+    try{ img.loading='lazy'; img.decoding='async'; img.referrerPolicy='no-referrer'; if(!img.alt) img.alt='Figure for question '+q.qno; }catch(e){}
+  });
 
   if (q.type === 'mcq'){
     q.options.forEach((opt, idx) => {
@@ -571,29 +641,17 @@ function renderQuestion(){
     }
   }
 
+  updatePaletteState();
+
   if (typeof renderMathInElement === "function") {
     try {
-      renderMathInElement(qtextEl, {
-        delimiters: [
-          { left: "$$", right: "$$", display: true },
-          { left: "\\(", right: "\\)", display: false }
-        ]
-      });
-      renderMathInElement(optionsEl, {
-        delimiters: [
-          { left: "$$", right: "$$", display: true },
-          { left: "\\(", right: "\\)", display: false }
-        ]
-      });
-    } catch (e) { }
+      renderMathInElement(qtextEl, { delimiters: [{ left: "$$", right: "$$", display: true }, { left: "\\(", right: "\\)", display: false }] });
+      renderMathInElement(optionsEl, { delimiters: [{ left: "$$", right: "$$", display: true }, { left: "\\(", right: "\\)", display: false }] });
+    } catch(e){}
   }
-
-  updatePaletteState();
 }
 
-/* --------------------------
-   SAVE / CLEAR / BUTTON ACTIONS
---------------------------- */
+/* SAVE/CLEAR/BUTTON ACTIONS */
 function saveAnswer(){
   const q = QUESTIONS[state.currentIndex];
   if (q.type === 'mcq'){
@@ -612,7 +670,6 @@ function saveAnswer(){
   updatePaletteState();
   liveInfo.textContent = 'Answers Saved';
 }
-
 clearBtn.addEventListener('click', () => {
   state.answers[state.currentIndex] = null;
   state.review[state.currentIndex] = false;
@@ -626,26 +683,11 @@ clearBtn.addEventListener('click', () => {
   if (nat) nat.value = '';
   updatePaletteState();
 });
+prevBtn.addEventListener('click', () => { saveAnswer(); gotoQuestion(state.currentIndex - 1); });
+nextBtn.addEventListener('click', () => { saveAnswer(); gotoQuestion(state.currentIndex + 1); });
+reviewNextBtn.addEventListener('click', () => { saveAnswer(); state.review[state.currentIndex] = true; state.visited[state.currentIndex] = true; gotoQuestion(state.currentIndex + 1); updatePaletteState(); });
 
-prevBtn.addEventListener('click', () => {
-  saveAnswer();
-  gotoQuestion(state.currentIndex - 1);
-});
-nextBtn.addEventListener('click', () => {
-  saveAnswer();
-  gotoQuestion(state.currentIndex + 1);
-});
-reviewNextBtn.addEventListener('click', () => {
-  saveAnswer();
-  state.review[state.currentIndex] = true;
-  state.visited[state.currentIndex] = true;
-  gotoQuestion(state.currentIndex + 1);
-  updatePaletteState();
-});
-
-/* --------------------------
-   CORRECTNESS (handles range-based NATs)
---------------------------- */
+/* CORRECTNESS */
 function isCorrect(idx){
   const q = QUESTIONS[idx];
   const ans = state.answers[idx];
@@ -658,28 +700,17 @@ function isCorrect(idx){
     if (user.size !== correct.size) return false;
     for (let v of correct) if (!user.has(v)) return false;
     return true;
-  } else if (q.type === 'nat') {
+  } else if (q.type === 'nat'){
     const user = Number(ans);
     if (isNaN(user)) return false;
-
-    // If explicit range provided, use it (inclusive)
-    if (q.answerMin !== undefined && q.answerMax !== undefined) {
-        return user >= q.answerMin && user <= q.answerMax;
-    }
-
-    // Fallback to exact match if only answerNum present
-    if (q.answerNum !== undefined) {
-        return Math.abs(user - Number(q.answerNum)) <= 1e-6;
-    }
-
+    if (q.answerMin !== undefined && q.answerMax !== undefined) return user >= q.answerMin && user <= q.answerMax;
+    if (q.answerNum !== undefined) return Math.abs(user - Number(q.answerNum)) <= 1e-6;
     return false;
   }
   return false;
 }
 
-/* --------------------------
-   SCORING
---------------------------- */
+/* SCORING */
 function computeScore(){
   let total = 0;
   for (let i=0;i<QUESTIONS.length;i++){
@@ -703,9 +734,7 @@ function maxPossibleScore(){
   return QUESTIONS.reduce((s,q)=> s + q.marks, 0);
 }
 
-/* --------------------------
-   SUBMIT & REVIEW
---------------------------- */
+/* SUBMIT & REVIEW (with highlighting) */
 submitBtn.addEventListener('click', ()=> {
   if (!confirm('Submit exam now? You will not be able to change answers after submitting.')) return;
   saveAnswer();
@@ -721,18 +750,12 @@ function showSubmissionModal(message, actionFn, autoAction=false){
   const btn = document.createElement('button');
   btn.className = 'btn ghostt';
   btn.textContent = 'View Results';
-  btn.addEventListener('click', () => {
-    overlay.remove();
-    actionFn();
-  });
+  btn.addEventListener('click', () => { overlay.remove(); actionFn(); });
   modal.appendChild(btn);
   overlay.appendChild(modal);
   document.body.appendChild(overlay);
   if (autoAction){
-    setTimeout(()=> {
-      if (overlay.parentNode) overlay.remove();
-      actionFn();
-    }, 1200);
+    setTimeout(()=> { if (overlay.parentNode) overlay.remove(); actionFn(); }, 1200);
   }
 }
 
@@ -751,31 +774,47 @@ function submitExam(){
   reviewListEl.innerHTML = '';
   QUESTIONS.forEach((q, i) => {
     const wrap = document.createElement('div');
-    wrap.style.padding = '8px';
-    wrap.style.borderBottom = '1px solid rgba(255,255,255,0.03)';
+    wrap.className = 'rwrap';
 
     const title = document.createElement('div');
-    title.innerHTML = `<strong>Q${q.qno} (${q.type.toUpperCase()}, ${q.marks}m) — ${q.section}${q.subtype? ' / ' + q.subtype : ''}</strong>`;
+    title.innerHTML = `<strong>Q${q.qno} (${q.type.toUpperCase()}, ${q.marks}m) — ${q.section}</strong>`;
     wrap.appendChild(title);
 
     const qt = document.createElement('div');
     qt.style.margin = '6px 0';
     qt.innerHTML = q.question;
+    // ensure images lazy
+    qt.querySelectorAll && qt.querySelectorAll('img').forEach(img => {
+      try { img.loading = 'lazy'; img.decoding='async'; img.referrerPolicy='no-referrer'; if(!img.alt) img.alt='Figure for question ' + q.qno; } catch(e){}
+    });
     wrap.appendChild(qt);
 
+    // display options with correct/wrong highlighting
     if (q.type === 'mcq' || q.type === 'msq'){
-      const ul = document.createElement('ul');
+      const container = document.createElement('div');
+      // for mcq: q.answer is 0-based index; for msq: q.answerMulti array
+      const userAns = state.answers[i];
+      const correctSet = (q.type === 'mcq') ? new Set([q.answer]) : new Set(q.answerMulti || []);
+      // create option elements
       q.options.forEach((opt, idx) => {
-        const li = document.createElement('li');
-        const correct = (q.type === 'mcq') ? (idx === q.answer) : (Array.isArray(q.answerMulti) && q.answerMulti.includes(idx));
-        const userSelected = (q.type === 'mcq') ? (state.answers[i] === idx) : (Array.isArray(state.answers[i]) && state.answers[i].includes(idx));
-        li.innerHTML = `${String.fromCharCode(65+idx)}. ${opt}`;
-        if (correct) li.style.color = 'var(--accent)';
-        if (userSelected && !correct) li.style.color = 'var(--wrong)';
-        if (userSelected && correct) li.style.fontWeight = '800';
-        ul.appendChild(li);
+        const optDiv = document.createElement('div');
+        optDiv.className = 'review-option';
+        // mark correct
+        if (correctSet.has(idx)) optDiv.classList.add('correct');
+        // mark wrong selected by user (user selected but not correct)
+        const userSelected = (q.type === 'mcq') ? (userAns === idx) : (Array.isArray(userAns) && userAns.includes(idx));
+        if (userSelected && !correctSet.has(idx)) optDiv.classList.add('wrong');
+        // if user selected and correct, also add selected class (visual emphasis)
+        if (userSelected) optDiv.classList.add('selected');
+        // contents: label + option HTML (options may contain images/HTML)
+        // disable inputs: show a visual indicator icon
+        let marker = '';
+        if (correctSet.has(idx)) marker = `<span class="correct-badge">Correct</span>`;
+        else if (userSelected) marker = `<span class="wrong-badge">Your choice</span>`;
+        optDiv.innerHTML = `<div style="display:flex;align-items:center;gap:12px"><div style="flex:1">${String.fromCharCode(65+idx)}. ${opt}</div><div>${marker}</div></div>`;
+        container.appendChild(optDiv);
       });
-      wrap.appendChild(ul);
+      wrap.appendChild(container);
     } else if (q.type === 'nat'){
       const p = document.createElement('div');
       const correctText = (q.answerNum !== undefined) ? q.answerNum : ((q.answerMin !== undefined && q.answerMax !== undefined) ? `${q.answerMin} to ${q.answerMax}` : 'N/A');
@@ -786,7 +825,7 @@ function submitExam(){
     if (q.explanation){
       const ex = document.createElement('div');
       ex.style.marginTop = '6px';
-      ex.style.color = 'var(--muted)';
+      ex.style.color = '#444';
       ex.innerHTML = `Explanation: ${q.explanation}`;
       wrap.appendChild(ex);
     }
@@ -810,28 +849,12 @@ function submitExam(){
   }, false);
 }
 
-/* --------------------------
-   START QUIZ
---------------------------- */
-startBtn.addEventListener('click', ()=>{ 
-  welcomeEl.classList.add('hidden');
-  quizUI.classList.remove('hidden');
-  quizUI.setAttribute('aria-hidden', 'false');
-  buildPalette();
-  gotoQuestion(0);
-  timerEl.textContent = formatTime(state.remainingSec);
-});
+/* START & NAV */
+startBtn.addEventListener('click', ()=>{ welcomeEl.classList.add('hidden'); quizUI.classList.remove('hidden'); quizUI.setAttribute('aria-hidden','false'); buildPalette(); gotoQuestion(0); timerEl.textContent = formatTime(state.remainingSec); startTimer(); });
+window.addEventListener('keydown', (e)=>{ if (state.submitted) return; if (e.key === 'ArrowLeft'){ saveAnswer(); gotoQuestion(state.currentIndex - 1); } if (e.key === 'ArrowRight'){ saveAnswer(); gotoQuestion(state.currentIndex + 1); } });
 
-/* KEYBOARD NAV */
-window.addEventListener('keydown', (e)=>{ 
-  if (state.submitted) return;
-  if (e.key === 'ArrowLeft'){ saveAnswer(); gotoQuestion(state.currentIndex - 1); }
-  if (e.key === 'ArrowRight'){ saveAnswer(); gotoQuestion(state.currentIndex + 1); }
-});
-
-/* initialize no-op until start */
-function init(){ }
-init();
+/* minimal init */
+(function init(){ /* if you have saved state restore here */ })();
 </script>
 </body>
 </html>
